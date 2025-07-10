@@ -1,183 +1,190 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wallet App</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0d1117;
-      color: #c9d1d9;
-      transition: background-color 0.3s, color 0.3s;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      overflow-x: hidden;
     }
     header {
-      background-color: #161b22;
-      padding: 1rem 2rem;
+      background-color: #111;
+      padding: 1rem;
       text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
     }
-    header h1 {
-      margin: 0;
+    .balance {
+      text-align: center;
+      margin: 1rem;
+      font-size: 2rem;
     }
-    .tabs {
+    .buttons {
       display: flex;
       justify-content: space-around;
-      background: #161b22;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      border-top: 1px solid #30363d;
+      margin: 1rem;
     }
-    .tabs button {
-      flex: 1;
-      padding: 1rem;
-      background: none;
+    button {
+      padding: 0.7rem 1.2rem;
       border: none;
-      color: #8b949e;
-      font-weight: bold;
+      background-color: #333;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
     }
-    .tabs button.active {
-      color: #58a6ff;
+    button:hover {
+      background-color: #555;
     }
-    .section {
-      padding: 2rem;
-      display: none;
+    .wallet-info {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
     }
-    .section.active {
-      display: block;
+    .transactions {
+      padding: 1rem;
     }
     .transaction {
-      margin-bottom: 1rem;
-      border-bottom: 1px solid #30363d;
-      padding-bottom: 1rem;
+      border-bottom: 1px solid #444;
+      padding: 0.5rem 0;
     }
-    .btn-lock {
-      background-color: #238636;
-      padding: 0.75rem 1rem;
-      border: none;
-      color: white;
-      font-weight: bold;
+    .popup {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #222;
+      color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+      z-index: 999;
+    }
+    .popup button {
       margin-top: 1rem;
-      border-radius: 5px;
     }
+    #support {
+      text-align: center;
+      padding: 1rem;
+      background-color: #111;
+    }
+    .loader {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .loader div {
+      width: 40px;
+      height: 40px;
+      border: 5px solid #ccc;
+      border-top: 5px solid #1db954;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
     .toggle-mode {
-      background-color: #30363d;
-      color: #c9d1d9;
-      padding: 0.5rem 1rem;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #222;
+      color: #fff;
+      padding: 5px 10px;
       border-radius: 5px;
-      border: none;
-      margin-top: 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Wallet App</h1>
-  </header>  <div id="home" class="section active">
-    <h2>Balance: $6,685.68</h2>
-    <button class="btn-lock" onclick="alert('Pay $7 to unlock this feature')">Send</button>
-    <button class="btn-lock" onclick="alert('Pay $7 to unlock this feature')">Receive</button>
-    <button class="btn-lock" onclick="alert('Pay $7 to unlock this feature')">Scan</button>
-    <p style="margin-top: 1rem;">Wallet: <code>0xfAbC09ba76d0004339179aa6bDFF7d0d3C9820Ff</code></p>
-    <p>Network: Crypto One Chain</p>
-    <p>Token: POL</p>
-  </div>  <div id="transactions" class="section">
-    <h2>Transaction History</h2>
-    <div class="transaction">Transfer From<br>Jul 6, 2025<br><strong>+$6,685.00</strong> ✅ Confirmed</div>
-    <div class="transaction">Transfer From<br>Jul 7, 2025<br><strong>-$1,354.00</strong> ✅ Confirmed</div>
-    <!-- Add more fake confirmed transactions -->
-    <!-- Repeat or generate as needed -->
-  </div>  <div id="stats" class="section">
-    <h2>Token Breakdown</h2>
-    <canvas id="pieChart" width="300" height="300"></canvas>
-    <h2 style="margin-top: 2rem;">Balance Over Time</h2>
-    <canvas id="lineChart" width="300" height="200"></canvas>
-  </div>  <div id="settings" class="section">
-    <h2>Settings</h2>
-    <button class="toggle-mode" onclick="toggleTheme()">Toggle Light/Dark Mode</button>
-    <h3 style="margin-top: 2rem;">Support</h3>
-    <a class="btn-lock" href="https://t.me/jhayone_tech5" target="_blank">@jhayone_tech5</a>
-  </div>  <div class="tabs">
-    <button onclick="showTab('home')" class="active">🏠</button>
-    <button onclick="showTab('transactions')">📄</button>
-    <button onclick="showTab('stats')">📊</button>
-    <button onclick="showTab('settings')">⚙️</button>
-  </div>  <script>
-    const tabs = document.querySelectorAll('.tabs button');
-    const sections = document.querySelectorAll('.section');
 
-    function showTab(id) {
-      sections.forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      tabs.forEach(t => t.classList.remove('active'));
-      tabs.forEach(t => {
-        if (t.getAttribute('onclick').includes(id)) t.classList.add('active');
-      });
-    }
+<div class="loader"><div></div></div>
 
-    function toggleTheme() {
-      const body = document.body;
-      const isDark = body.style.backgroundColor === 'rgb(13, 17, 23)';
-      if (isDark) {
-        body.style.backgroundColor = '#ffffff';
-        body.style.color = '#000000';
-      } else {
-        body.style.backgroundColor = '#0d1117';
-        body.style.color = '#c9d1d9';
-      }
-    }
+<div class="toggle-mode" onclick="toggleMode()">Switch Mode</div>
 
-    // Charts
-    new Chart(document.getElementById('pieChart'), {
-      type: 'pie',
-      data: {
-        labels: ['POL', 'ETH'],
-        datasets: [{
-          data: [70, 30],
-          backgroundColor: ['#238636', '#58a6ff']
-        }]
-      },
-      options: {
-        plugins: {
-          legend: {
-            labels: {
-              color: '#c9d1d9'
-            }
-          }
-        }
-      }
-    });
+<header>Wallet App</header>
 
-    new Chart(document.getElementById('lineChart'), {
-      type: 'line',
-      data: {
-        labels: ['Jul 1', 'Jul 2', 'Jul 3', 'Jul 4', 'Jul 5', 'Jul 6'],
-        datasets: [{
-          label: 'Balance ($)',
-          data: [2000, 3000, 2500, 4000, 5000, 6685.68],
-          borderColor: '#58a6ff',
-          fill: false
-        }]
-      },
-      options: {
-        scales: {
-          x: {
-            ticks: { color: '#c9d1d9' }
-          },
-          y: {
-            ticks: { color: '#c9d1d9' }
-          }
-        },
-        plugins: {
-          legend: {
-            labels: {
-              color: '#c9d1d9'
-            }
-          }
-        }
-      }
-    });
-  </script></body>
+<div class="balance">$6,685.68</div>
+
+<div class="buttons">
+  <button onclick="showPopup()">Send</button>
+  <button onclick="showPopup()">Receive</button>
+  <button onclick="showPopup()">Scan</button>
+</div>
+
+<div class="wallet-info">
+  Wallet: 0xfAbC09ba76d0004339179aa6bDFF7d0d3C9820Ff<br>
+  Network: Crypto One Chain<br>
+  Token: POL
+</div>
+
+<div class="transactions" id="transactions"></div>
+
+<div class="popup" id="popup">
+  <p>🔒 This feature is locked.</p>
+  <p>Pay <strong>$7</strong> to unlock.</p>
+  <button onclick="hidePopup()">Close</button>
+</div>
+
+<div id="support">
+  Need help? Contact: <a href="https://t.me/jhayone_tech5" target="_blank" style="color:#1db954;">@jhayone_tech5</a>
+</div>
+
+<script>
+  // Loading animation
+  window.addEventListener("load", () => {
+    document.querySelector(".loader").style.display = "none";
+  });
+
+  // Popup
+  function showPopup() {
+    document.getElementById("popup").style.display = "block";
+  }
+
+  function hidePopup() {
+    document.getElementById("popup").style.display = "none";
+  }
+
+  // Transactions
+  const container = document.getElementById("transactions");
+  const staticTop = `
+    <div class="transaction">Transfer From<br>Jul 6, 2025<br>+ $6,685.00 ✅ Confirmed</div>
+    <div class="transaction">Transfer From<br>Jul 7, 2025<br>- $1,354.00 ✅ Confirmed</div>
+  `;
+
+  let tx = '';
+  const today = new Date();
+  for (let i = 0; i < 100; i++) {
+    let date = new Date(today.getTime() - i * 86400000);
+    const label = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const amount = (Math.random() * (4000 - 1000) + 1000).toFixed(2);
+    const sign = Math.random() > 0.5 ? '+' : '-';
+    tx += `<div class="transaction">Transfer From<br>${label}<br>${sign} $${amount} ✅ Confirmed</div>`;
+  }
+
+  container.innerHTML = staticTop + tx;
+
+  // Toggle Light/Dark
+  let darkMode = true;
+  function toggleMode() {
+    darkMode = !darkMode;
+    document.body.style.backgroundColor = darkMode ? "#000" : "#fff";
+    document.body.style.color = darkMode ? "#fff" : "#000";
+    document.querySelectorAll(".transaction").forEach(tx => tx.style.borderBottom = darkMode ? "1px solid #444" : "1px solid #ccc");
+    document.querySelector(".toggle-mode").innerText = darkMode ? "Switch to Light Mode" : "Switch to Dark Mode";
+  }
+</script>
+
+</body>
 </html>
