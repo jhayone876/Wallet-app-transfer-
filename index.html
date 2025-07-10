@@ -9,117 +9,161 @@
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #000;
-      color: #fff;
+      color: #eee;
     }
+
     header {
       background-color: #111;
-      padding: 1.2rem;
-      text-align: center;
-      font-size: 1.5rem;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.2rem;
       font-weight: bold;
-      border-bottom: 1px solid #333;
+      color: #0f0;
     }
-    .balance-section {
+
+    .balance {
       text-align: center;
-      padding: 2rem 1rem;
+      margin: 2rem 0;
     }
-    .balance-section h2 {
+
+    .balance h2 {
+      margin: 0;
       font-size: 2.5rem;
-      margin-bottom: 10px;
+      color: #0f0;
+      animation: glow 1.5s ease-in-out infinite alternate;
     }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #0f0; }
+      to { text-shadow: 0 0 20px #0f0; }
+    }
+
+    .wallet-info {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
     .buttons {
       display: flex;
       justify-content: center;
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin: 1.5rem 0;
     }
+
     .buttons button {
-      padding: 0.75rem 1.5rem;
-      background-color: #222;
-      border: 1px solid #444;
-      color: #fff;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-    .wallet-info {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #bbb;
-      margin-bottom: 2rem;
-    }
-    .transaction-history {
-      padding: 1rem 1.5rem;
-    }
-    .transaction {
-      background-color: #111;
-      border: 1px solid #222;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 10px;
-    }
-    .transaction span {
-      display: block;
-    }
-    .amount {
+      background-color: #0f0;
+      color: #000;
+      border: none;
+      padding: 0.8rem 1.2rem;
       font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .transactions {
+      max-width: 500px;
+      margin: auto;
+      padding: 1rem;
+      background-color: #111;
+      border-radius: 8px;
+    }
+
+    .transactions h3 {
+      margin-bottom: 1rem;
       color: #0f0;
+    }
+
+    .txn {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #222;
+    }
+
+    .txn:last-child {
+      border-bottom: none;
+    }
+
+    .popup {
+      position: fixed;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #111;
+      border: 2px solid #0f0;
+      color: #0f0;
+      padding: 1.5rem;
+      border-radius: 8px;
+      display: none;
+      z-index: 999;
+      text-align: center;
+    }
+
+    .popup button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #0f0;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
     }
   </style>
 </head>
 <body>
-  <header>Wallet App</header>
 
-  <div class="balance-section">
+  <header>
+    Wallet App
+  </header>
+
+  <div class="balance">
+    <p>Current Balance</p>
     <h2>$6,685.68</h2>
-    <div class="buttons">
-      <button>Send</button>
-      <button>Receive</button>
-      <button>Scan</button>
-    </div>
-    <div class="wallet-info">
-      Wallet Address: 0xfAbC09ba76d0004339179aa6bDFF7d0d3C9820Ff<br>
-      Network: Crypto One Chain<br>
-      Token: POL
-    </div>
   </div>
 
-  <div class="transaction-history">
+  <div class="wallet-info">
+    Wallet: 0xfAbC09ba76d0004339179aa6bDFF7d0d3C9820Ff
+  </div>
+
+  <div class="buttons">
+    <button onclick="showPopup()">Send</button>
+    <button onclick="showPopup()">Receive</button>
+    <button onclick="showPopup()">Scan</button>
+  </div>
+
+  <div class="transactions">
     <h3>Transaction History</h3>
 
-    <!-- Fixed real entry -->
-    <div class="transaction">
-      <span>Transfer From</span>
-      <span>Jul 6, 2025</span>
-      <span class="amount">+$6,685.00 ✅ Confirmed</span>
-    </div>
-    <div class="transaction">
-      <span>Transfer From</span>
-      <span>Jul 7, 2025</span>
-      <span class="amount">-$1,354.00 ✅ Confirmed</span>
-    </div>
+    <!-- Example of repeated transactions -->
+    <div class="txn">Transfer From<br>Jul 6, 2025<br>+$6,685.00 ✅ Confirmed</div>
+    <div class="txn">Transfer From<br>Jul 7, 2025<br>-$1,354.00 ✅ Confirmed</div>
 
-    <!-- Auto-generated sample confirmed entries -->
-    <!-- You can repeat or edit these blocks as needed -->
-    <!-- Begin Generated -->
-    <script>
-      const container = document.querySelector('.transaction-history');
-      const dates = ["Jul 10, 2025", "Jul 9, 2025", "Jul 8, 2025", "Jul 7, 2025", "Jul 6, 2025", "Jul 5, 2025", "Jul 4, 2025", "Jul 3, 2025", "Jul 2, 2025", "Jul 1, 2025"];
-      for (let i = 0; i < 100; i++) {
-        const div = document.createElement("div");
-        div.className = "transaction";
-        const date = dates[i % dates.length];
-        const amount = (Math.random() * 3000 + 1000).toFixed(2);
-        const type = Math.random() > 0.5 ? '+' : '-';
-        div.innerHTML = `
-          <span>Transfer From</span>
-          <span>${date}</span>
-          <span class="amount">${type}$${amount} ✅ Confirmed</span>
-        `;
-        container.appendChild(div);
-      }
-    </script>
-    <!-- End Generated -->
+    <!-- You can repeat this block manually or script it if needed -->
+    <div class="txn">Transfer From<br>Jul 8, 2025<br>+$2,849.27 ✅ Confirmed</div>
+    <div class="txn">Transfer From<br>Jul 9, 2025<br>-$1,731.44 ✅ Confirmed</div>
+    <div class="txn">Transfer From<br>Jul 10, 2025<br>+$1,452.60 ✅ Confirmed</div>
+    <div class="txn">Transfer From<br>Jul 10, 2025<br>-$2,218.45 ✅ Confirmed</div>
+    <div class="txn">Transfer From<br>Jul 10, 2025<br>+$3,865.77 ✅ Confirmed</div>
+    <!-- Add more as needed -->
 
   </div>
+
+  <div class="popup" id="popup">
+    <p>⚠️ Pay $7 to unlock this feature</p>
+    <button onclick="hidePopup()">Close</button>
+  </div>
+
+  <script>
+    function showPopup() {
+      document.getElementById("popup").style.display = "block";
+    }
+
+    function hidePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+  </script>
+
 </body>
 </html>
